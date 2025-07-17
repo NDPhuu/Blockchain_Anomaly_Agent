@@ -1,0 +1,4 @@
+id,anomaly_name,description
+1,High Volume Wash Trading,"Giao dịch rửa, trong đó một thực thể liên tục mua và bán cùng một tài sản để tạo ra khối lượng giao dịch giả mạo."
+2,Sybil Attack,"Một cuộc tấn công Sybil là một loại tấn công vào một hệ thống máy tính, trong đó một kẻ tấn công tạo ra một số lượng lớn các danh tính giả mạo và sử dụng chúng để giành được ảnh hưởng không cân xứng trong mạng."
+3,Phishing Attack,"Lừa đảo người dùng để lấy private key hoặc thông tin nhạy cảm thông qua các trang web hoặc email giả mạo."

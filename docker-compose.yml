@@ -1,0 +1,49 @@
+# Cú pháp mới của Docker Compose không cần dòng 'version' ở đầu.
+services:
+  # Service cho ứng dụng backend FastAPI của chúng ta
+  backend:
+    # Build image từ Dockerfile trong thư mục gốc của dự án
+    build: .
+    container_name: rag_chatbot_backend
+    ports:
+      - "8000:8000"
+    volumes:
+      # Mount code ứng dụng để live-reload khi phát triển
+      - ./app:/app/app
+    # Thiết lập sự phụ thuộc vào service qdrant
+    depends_on:
+      qdrant:
+        # Điều kiện: chỉ khởi động backend khi healthcheck của qdrant thành công
+        condition: service_healthy
+    environment:
+      # Cung cấp tên host của service qdrant cho backend
+      - QDRANT_HOST=qdrant
+
+  # Service cho kho vector Qdrant
+  qdrant:
+    # Thay vì dùng 'image', chúng ta dùng 'build' để tạo image tùy chỉnh
+    build:
+      # Chỉ định thư mục chứa Dockerfile của Qdrant
+      context: ./qdrant
+    container_name: rag_chatbot_qdrant
+    ports:
+      # Mở cổng REST API của Qdrant
+      - "6333:6333"
+    volumes:
+      # Sử dụng một Docker volume để lưu trữ dữ liệu Qdrant một cách bền vững
+      - qdrant_data:/qdrant/storage
+    # Cấu hình kiểm tra sức khỏe, bây giờ sẽ hoạt động vì chúng ta đã cài curl
+    user: root  
+    healthcheck:
+      # Lệnh test sử dụng curl để kiểm tra endpoint /readyz
+      # -f: fail silently (trả về lỗi nếu server trả về mã HTTP >= 400)
+      test: ["CMD", "curl", "-f", "http://localhost:6333/readyz"]
+      # Các tham số thời gian để cho Qdrant đủ thời gian khởi động
+      interval: 10s
+      timeout: 5s
+      retries: 12
+      start_period: 30s
+
+# Định nghĩa volume được sử dụng bởi service qdrant
+volumes:
+  qdrant_data:

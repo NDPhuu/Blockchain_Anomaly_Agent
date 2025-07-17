@@ -1,0 +1,16 @@
+# Bắt đầu từ image Qdrant gốc
+FROM qdrant/qdrant:v1.9.0
+
+# Chuyển sang người dùng root để có quyền cài đặt
+USER root
+
+# Cập nhật và cài đặt curl
+RUN apt-get update -qq && \
+    apt-get install -y --no-install-recommends curl && \
+    rm -rf /var/lib/apt/lists/*
+
+# Chúng ta không cần chown nữa vì chúng ta sẽ chạy với tư cách root
+# RUN mkdir -p /qdrant/storage && chown -R 1000:1000 /qdrant/storage
+
+# XÓA HOẶC COMMENT DÒNG NÀY ĐI
+# USER 1000
