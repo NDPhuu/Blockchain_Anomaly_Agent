@@ -1,11 +1,3 @@
-Of course. A professional, well-documented repository is a hallmark of a great architect. Presenting your work clearly in English is essential for wider collaboration and understanding.
-
-Here is a complete, professionally crafted `README.md` in English, based on our entire development process. It's designed to be clear, technically sound, and easy to follow.
-
-Simply copy and paste the entire content below into the `README.md` file in your repository's root directory.
-
----
-
 # Advanced RAG Agent for Blockchain Anomaly Detection
 
 ## 1. Introduction
