@@ -56,29 +56,29 @@ flowchart LR
   end
 
   subgraph "② Luồng Online: Real‑time Inference (Agent‑based)"
-    B1[":bust_in_silhouette: User"]:::online --> B2[":wrench: Backend API<br/>FastAPI"]:::online
+    B1["👤 User"]:::online --> B2["🔧 Backend API<br/>FastAPI"]:::online
 
     subgraph "Container: Backend"
-      B2 --> B4{":robot: Agent Service<br/>(Router‑Executor‑Synthesizer)"}:::online
-      B4 -- "1. Router quyết định" --> B4_Executor{":tools: Executor<br/>(Thực thi công cụ)"}:::online
+      B2 --> B4{"🤖 Agent Service<br/>(Router‑Executor‑Synthesizer)"}:::online
+      B4 -- "1. Router quyết định" --> B4_Executor{"🛠️ Executor<br/>(Thực thi công cụ)"}:::online
     end
 
     B4_Executor -- "Chọn Knowledge Base" --> B5{"Embedding<br/>(SentenceTransformer)"}:::online
-    B4_Executor -- "Chọn Anomaly Detector" --> C1[":chart_with_upwards_trend: Anomaly Detection API"]:::api
-    B4_Executor -- "Chọn Graph Handler" --> C2[":spider_web: Graph Handling API"]:::api
-    B4_Executor -- "Chọn Web Search" --> C3[":globe_with_meridians: Web Search API<br/>(DuckDuckGo)"]:::api
+    B4_Executor -- "Chọn Anomaly Detector" --> C1["📈 Anomaly Detection API"]:::api
+    B4_Executor -- "Chọn Graph Handler" --> C2["🕸️ Graph Handling API"]:::api
+    B4_Executor -- "Chọn Web Search" --> C3["🌐 Web Search API<br/>(DuckDuckGo)"]:::api
 
     B5 --> A5
-    A5 --> B_Context[":pencil: Tool Output / Context"]:::data
+    A5 --> B_Context["📝 Tool Output / Context"]:::data
     C1 --> B_Context
     C2 --> B_Context
     C3 --> B_Context
 
-    B_Context --> B6[":brain: LLM Client (Synthesizer)<br/>LangChain"]:::online
-    B6 --> B7[":globe_with_meridians: host.docker.internal:11434"]:::online
+    B_Context --> B6["🧠 LLM Client (Synthesizer)<br/>LangChain"]:::online
+    B6 --> B7["🌐 host.docker.internal:11434"]:::online
 
     subgraph "Máy Host"
-      B7 --> B8[":gear: LLM Server<br/>Ollama"]:::online
+      B7 --> B8["⚙️ LLM Server<br/>Ollama"]:::online
     end
 
     B7 <--> B8
@@ -86,6 +86,7 @@ flowchart LR
   end
 
   linkStyle default stroke:#1464e4,stroke-width:3px;
+
 ```
 
 ## 4. Tech Stack
