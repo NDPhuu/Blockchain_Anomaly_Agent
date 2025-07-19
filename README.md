@@ -6,7 +6,7 @@ This repository serves as a **Proof-of-Concept (PoC)** environment for an advanc
 
 This is not just a standard RAG chatbot. The system is built as an intelligent **Agent** capable of making decisions and utilizing a variety of tools—from querying an internal knowledge base and performing real-time web searches to interacting with specialized blockchain analysis services.
 
-***⚠️ CAUTION: THE goal of this repository is to experiment, refine, and document core architectural decisions before applying them to the MAIN PROJECT --> ![HERE](https://github.com/pexa8335/FraudGraphML) <---.**
+***⚠️ CAUTION: THE goal of this repository is to experiment, refine, and document core architectural decisions before applying them to the MAIN PROJECT --> ![[HERE]](https://github.com/pexa8335/FraudGraphML) <---.**
 
 ## 2. Core Design Philosophy
 
