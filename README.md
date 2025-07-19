@@ -22,57 +22,70 @@ Every technical decision in this project adheres to four foundational philosophi
 The architecture is divided into two main flows: an **Offline Ingestion** flow for processing and vectorizing data, and an **Online Inference** flow where the Agent handles user requests in real-time.
 
 ```mermaid
-%%{init: {"theme": "base", "themeVariables": {"fontFamily": "Inter, Arial, sans-serif"}}}%%
-flowchart TD
+%%{init: {
+  "theme": "base",
+  "themeVariables": {
+    "fontFamily": "Inter, Arial, sans-serif",
+    "fontSize": "16px",
+    "primaryColor": "#e5faff",
+    "primaryBorderColor": "#1464e4",
+    "lineColor": "#1464e4",
+    "edgeLabelBackground": "#ffffff"
+  },
+  "flowchart": {
+    "htmlLabels": false,
+    "curve": "basis",
+    "rankSpacing": 60,
+    "nodeSpacing": 60,
+    "diagramPadding": 20,
+    "subGraphTitleMargin": { "top": 30, "bottom": 20 }
+  },
+  "arrowMarkerAbsolute": true
+}}%%
+flowchart LR
   classDef offline fill:#fff4e6,stroke:#e47614,stroke-width:2px;
   classDef online fill:#e6f5ff,stroke:#1464e4,stroke-width:2px;
   classDef data fill:#fffaf0,stroke:#ff8c00,stroke-width:2px;
   classDef api fill:#e6ffed,stroke:#14a33a,stroke-width:2px;
 
-  subgraph "① Offline Flow: Ingestion Pipeline"
-    A1["Raw Data:<br/>• .md<br/>• .csv"]:::data --> A2["Ingestion Script<br/>scripts/ingest_data.py"]:::offline
+  subgraph "① Luồng Offline: Ingestion Pipeline"
+    A1["Dữ liệu thô:<br/>• .md<br/>• .csv"]:::data --> A2["Ingestion Script<br/>scripts/ingest_data.py"]:::offline
     A2 --> A3{"Chunking (LangChain)"}:::offline
     A3 --> A4{"Embedding (SentenceTransformer)"}:::offline
-    A4 --> A5["Vector Store<br/>Qdrant Server"]:::data
+    A4 --> A5["Kho Vector<br/>Qdrant Server"]:::data
   end
 
-  subgraph "② Online Flow: Real‑time Inference (Agent‑based)"
-    B1["👤 User"]:::online --> B2["🔧 Backend API<br/>FastAPI"]:::online
+  subgraph "② Luồng Online: Real‑time Inference (Agent‑based)"
+    B1[":bust_in_silhouette: User"]:::online --> B2[":wrench: Backend API<br/>FastAPI"]:::online
 
     subgraph "Container: Backend"
-      B2 --> B4{"🤖 Agent Service<br/>(Router‑Executor‑Synthesizer)"}:::online
-      B4 -- "1. Router Decides" --> B4_Executor{"🛠️ Executor<br/>(Executes Tool)"}:::online
+      B2 --> B4{":robot: Agent Service<br/>(Router‑Executor‑Synthesizer)"}:::online
+      B4 -- "1. Router quyết định" --> B4_Executor{":tools: Executor<br/>(Thực thi công cụ)"}:::online
     end
 
-    subgraph "Tools Ecosystem"
-      B5{"Embedding<br/>(SentenceTransformer)"}:::online --> A5
-      C1["📈 Anomaly Detection API"]:::api
-      C2["🕸️ Graph Handling API"]:::api
-      C3["🌐 Web Search API<br/>(DuckDuckGo)"]:::api
-    end
+    B4_Executor -- "Chọn Knowledge Base" --> B5{"Embedding<br/>(SentenceTransformer)"}:::online
+    B4_Executor -- "Chọn Anomaly Detector" --> C1[":chart_with_upwards_trend: Anomaly Detection API"]:::api
+    B4_Executor -- "Chọn Graph Handler" --> C2[":spider_web: Graph Handling API"]:::api
+    B4_Executor -- "Chọn Web Search" --> C3[":globe_with_meridians: Web Search API<br/>(DuckDuckGo)"]:::api
 
-    B4_Executor -- "Select Knowledge Base" --> B5
-    B4_Executor -- "Select Anomaly Detector" --> C1
-    B4_Executor -- "Select Graph Handler" --> C2
-    B4_Executor -- "Select Web Search" --> C3
+    B5 --> A5
+    A5 --> B_Context[":pencil: Tool Output / Context"]:::data
+    C1 --> B_Context
+    C2 --> B_Context
+    C3 --> B_Context
 
-    B_Context["📝 Tool Output / Context"]:::data
+    B_Context --> B6[":brain: LLM Client (Synthesizer)<br/>LangChain"]:::online
+    B6 --> B7[":globe_with_meridians: host.docker.internal:11434"]:::online
 
-    A5 -- "Retrieved Context" --> B_Context
-    C1 -- "Anomaly Results" --> B_Context
-    C2 -- "Graph Analysis Results" --> B_Context
-    C3 -- "Web Results" --> B_Context
-
-    B_Context -- "2. Context is Aggregated" --> B6["🧠 LLM Client (Synthesizer)<br/>LangChain"]:::online
-    B6 --> B7("🌐 host.docker.internal:11434"):::online
-
-    subgraph "Host Machine"
-      B8["⚙️ LLM Server<br/>Ollama"]:::online
+    subgraph "Máy Host"
+      B7 --> B8[":gear: LLM Server<br/>Ollama"]:::online
     end
 
     B7 <--> B8
     B6 -. "3. Token stream" .-> B2
   end
+
+  linkStyle default stroke:#1464e4,stroke-width:3px;
 ```
 
 ## 4. Tech Stack
