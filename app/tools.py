@@ -1,5 +1,4 @@
 # app/tools.py
-from __future__ import annotations
 import httpx
 import structlog
 from typing import Dict, Any
